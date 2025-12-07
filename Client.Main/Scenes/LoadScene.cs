@@ -853,13 +853,17 @@ namespace Client.Main.Scenes
             GraphicsDevice.Clear(new Color(12, 12, 20));
             DrawBackground();
             var progress = GetProgress();
-            _progressBar.Progress = progress.Progress;
-            _progressBar.StatusText = progress.StatusText;
-            _progressBar.SizeText = $"{FormatBytes(progress.DownloadedBytes)} / {FormatBytes(progress.TotalBytes)}";
-            _progressBar.SpeedText = FormatSpeed(progress.SpeedBytesPerSecond);
-            _progressBar.EtaText = FormatEta(progress.EstimatedTimeRemaining);
-            _progressBar.Visible = true;
-            _progressBar.Draw(gameTime);
+            if(_progressBar != null)
+            {
+                _progressBar.Progress = progress.Progress;
+                _progressBar.StatusText = progress.StatusText;
+                _progressBar.SizeText = $"{FormatBytes(progress.DownloadedBytes)} / {FormatBytes(progress.TotalBytes)}";
+                _progressBar.SpeedText = FormatSpeed(progress.SpeedBytesPerSecond);
+                _progressBar.EtaText = FormatEta(progress.EstimatedTimeRemaining);
+                _progressBar.Visible = true;
+                _progressBar.Draw(gameTime);
+            }
+            
         }
 
         private new void DrawBackground()

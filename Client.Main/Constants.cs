@@ -144,7 +144,7 @@ namespace Client.Main
             SHOW_DEBUG_PANEL = true;
 
 #if WINDOWS
-            DataPath = @"C:\Games\MU_Red_1_20_61_Full\Data";
+            DataPath = @"F:\MuOnline\Retail\Data";
 #endif
         }
 #endif
