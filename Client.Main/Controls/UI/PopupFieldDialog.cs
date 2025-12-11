@@ -92,10 +92,10 @@ namespace Client.Main.Controls.UI
                 sprite.Draw(_cornerTopLeftTexture, new Rectangle(rect.X, rect.Y, _cornerTopLeftTexture.Width, _cornerTopLeftTexture.Height), Color.White);
                 sprite.Draw(_cornerTopRightTexture, new Rectangle(rect.X + rect.Width - _cornerTopRightTexture.Width, rect.Y, _cornerTopRightTexture.Width, _cornerTopRightTexture.Height), Color.White);
                 sprite.Draw(_cornerBottomLeftTexture, new Rectangle(rect.X, rect.Y + rect.Height - _cornerBottomLeftTexture.Height, _cornerBottomLeftTexture.Width, _cornerBottomLeftTexture.Height), Color.White);
-                sprite.Draw(_cornerBottomRightTexture, new Rectangle(rect.X + rect.Width - _cornerBottomRightTexture.Width, rect.Y + rect.Height - _cornerBottomRightTexture.Height, _cornerBottomRightTexture.Width, _cornerBottomRightTexture.Height), Color.White);
+                sprite.Draw(_cornerBottomRightTexture, new Rectangle(rect.X + rect.Width - _cornerBottomRightTexture.Width -1, rect.Y + rect.Height - _cornerBottomRightTexture.Height, _cornerBottomRightTexture.Width, _cornerBottomRightTexture.Height), Color.White);
 
                 sprite.Draw(_topLineTexture, new Rectangle(rect.X + _cornerTopLeftTexture.Width, rect.Y, rect.Width - _cornerTopLeftTexture.Width - _cornerTopRightTexture.Width, _topLineTexture.Height), Color.White);
-                sprite.Draw(_bottomLineTexture, new Rectangle(rect.X + _cornerBottomLeftTexture.Width, rect.Y + rect.Height - _bottomLineTexture.Height, rect.Width - _cornerBottomLeftTexture.Width - _cornerBottomRightTexture.Width, _bottomLineTexture.Height), Color.White);
+                sprite.Draw(_bottomLineTexture, new Rectangle(rect.X + _cornerBottomLeftTexture.Width, rect.Y + rect.Height - _bottomLineTexture.Height, rect.Width - _cornerBottomLeftTexture.Width - _cornerBottomRightTexture.Width -1, _bottomLineTexture.Height), Color.White);
                 sprite.Draw(_leftLineTexture, new Rectangle(rect.X, rect.Y + _cornerTopLeftTexture.Height, _leftLineTexture.Width, rect.Height - _cornerTopLeftTexture.Height - _cornerBottomLeftTexture.Height), Color.White);
                 sprite.Draw(_rightLineTexture, new Rectangle(rect.X + rect.Width - _rightLineTexture.Width, rect.Y + _cornerTopRightTexture.Height, _rightLineTexture.Width, rect.Height - _cornerTopRightTexture.Height - _cornerBottomRightTexture.Height), Color.White);
 

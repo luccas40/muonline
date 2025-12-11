@@ -13,7 +13,6 @@
   <Import Project="Client.Main.Shared.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\Client.Data\Client.Data.Windows.csproj"
-                      AdditionalProperties="MonoGameFramework=$(MonoGameFramework)" />
+    <ProjectReference Include="..\Client.Data\Client.Data.Windows.csproj" AdditionalProperties="MonoGameFramework=$(MonoGameFramework)" />
   </ItemGroup>
 </Project>

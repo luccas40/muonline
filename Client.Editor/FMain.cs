@@ -37,6 +37,7 @@ namespace Client.Editor
                 case ".ozb":
                 case ".ozd":
                 case ".ozp":
+                case ".ozg":
                     {
                         var editor = new CTextureEditor();
                         Editor = editor;

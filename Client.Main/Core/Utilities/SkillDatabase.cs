@@ -1,11 +1,12 @@
 #nullable enable
+using Client.Data.BMD;
+using Client.Data.LANG;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Client.Data.BMD;
-using Microsoft.Extensions.Logging;
 
 namespace Client.Main.Core.Utilities
 {
@@ -19,7 +20,7 @@ namespace Client.Main.Core.Utilities
 
         private static readonly ILogger? _logger = MuGame.AppLoggerFactory?.CreateLogger("SkillDatabase");
 
-        static SkillDatabase() => _skillDefinitions = InitializeSkillData();
+        static SkillDatabase() => _skillDefinitions = InitializeSkillDataLang();
 
         /// <summary>
         /// Loads skill_eng.bmd from an embedded resource and builds the definition table.
@@ -65,6 +66,69 @@ namespace Client.Main.Core.Utilities
                 finally
                 {
                     try { File.Delete(tempPath); } catch { /* ignore IO errors */ }
+                }
+
+                _logger?.LogInformation($"Loaded {skills.Count} skills from skill_eng.bmd");
+
+                return skills;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error while loading 'skill_eng.bmd'");
+            }
+
+            return data;
+        }
+
+        private static Dictionary<int, SkillBMD> InitializeSkillDataLang()
+        {
+            var data = new Dictionary<int, SkillBMD>();
+
+            var filePath = Path.Combine(Constants.DataPath, "Lang.mpr");
+
+
+            if (!File.Exists(filePath))
+            {
+                _logger?.LogError(
+                    "Lang.mpr not found. ");
+                return data;
+            }
+
+            try
+            {
+                LangMPRReader langReader = new();
+                var task = langReader.Load(filePath);
+                task.Wait();
+                LangSkillReader reader = new();
+                var task2 = reader.Load(task.Result, "\\eng\\skill(eng).txt");
+                task2.Wait();
+
+                Dictionary<int, SkillBMD> skills = [];
+
+                foreach (var kv in task2.Result)
+                {
+                    var value = kv.Value;
+                    SkillBMD entry = new()
+                    {
+                        AbilityGaugeCost = (ushort)value.AGCost,
+                        Damage = (ushort)value.Damage,
+                        Delay = value.Delay,
+                        Distance = (ushort)value.Distance,
+                        KillCount = (byte)value.ReqKillCount,
+                        MasteryType = (byte)value.Value1,
+                        MagicIcon = (ushort)value.Value41,
+                        Name = value.Name,
+                        RequiredLevel = (ushort)value.Level,
+                        ManaCost = (ushort)value.ManaCost,
+                        RequiredDexterity = value.ReqDex,
+                        RequiredEnergy = value.ReqEne,
+                        RequiredLeadership = (byte)value.ReqCmd,
+                        RequiredStrength = value.ReqStr,
+                        SkillUseType = (byte)value.UseType,
+
+
+                    };
+                    skills.Add(kv.Key, entry);
                 }
 
                 _logger?.LogInformation($"Loaded {skills.Count} skills from skill_eng.bmd");

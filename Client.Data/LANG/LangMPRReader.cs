@@ -23,7 +23,7 @@ namespace Client.Data.LANG
             }            
             zFileBytes = Decrypt(zFileBytes);
             ZipFile zFile = new(new MemoryStream(zFileBytes));
-            zFile.Password = "3q*#P<8ALZy*soC2&eHwrA^@=";
+            zFile.Password = "0!!o!fgdgc9!76%fdgw&*&^^wR<;;yl/ldZlT9"; //kr = 3q*#P<8ALZy*soC2&eHwrA^@=
             zFile.UseZip64 = UseZip64.Off;
             return zFile;
         }

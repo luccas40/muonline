@@ -14,9 +14,9 @@ namespace Client.Data.Texture
             var type = br.ReadString(3);
             var version = br.ReadByte();
             var size = br.ReadInt32();
-
+            byte[] zlibData = br.ReadBytes((int)(ms.Length - ms.Position));
             using var uncompressed = new MemoryStream();
-            using var dec = new ZLibStream(ms, CompressionMode.Decompress);
+            using var dec = new ZLibStream(new MemoryStream(zlibData), CompressionMode.Decompress);
             dec.CopyTo(uncompressed);
 
             var rawData = uncompressed.ToArray();

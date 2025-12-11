@@ -32,6 +32,7 @@ using System.Reflection;
 using Client.Main.Content;
 using Client.Data.ATT;
 using Client.Main.Controls.UI.Game.Buffs;
+using Client.Main.Controls.UI.Game.MasterSkillTree;
 
 namespace Client.Main.Scenes
 {
@@ -54,6 +55,7 @@ namespace Client.Main.Scenes
         private bool _isChangingWorld = false;
         private readonly List<(ServerMessage.MessageType Type, string Message)> _pendingNotifications = new();
         private CharacterInfoWindowControl _characterInfoWindow;
+        private CharacterMasterClassWindowControl _characterMasterClassWindow;
         private ILogger _logger = MuGame.AppLoggerFactory?.CreateLogger<GameScene>();
         private MapNameControl _currentMapNameControl; // Track active map name display
         private LabelControl _pingLabel; // Displays current ping
@@ -165,6 +167,11 @@ namespace Client.Main.Scenes
 
             _characterInfoWindow = new CharacterInfoWindowControl { X = 20, Y = 50, Visible = false };
             Controls.Add(_characterInfoWindow);
+
+            _characterMasterClassWindow = new();
+            _characterMasterClassWindow.X = DisplaySize.X/2 - _characterMasterClassWindow.DisplaySize.X/2;
+            _characterMasterClassWindow.Y = DisplaySize.Y / 2 - _characterMasterClassWindow.DisplaySize.Y / 2;
+            Controls.Add(_characterMasterClassWindow);
 
             _partyPanel = new PartyPanelControl();
             Controls.Add(_partyPanel);
@@ -400,6 +407,8 @@ namespace Client.Main.Scenes
                 EnsureWalkerNetworkId(finalWalkable, charState.Id, "final verification");
                 _logger?.LogDebug($"GameScene.LoadSceneContentWithProgress: After final fix - Walker.NetworkId: {finalWalkable.Walker?.NetworkId:X4}");
             }
+
+            _characterMasterClassWindow.InitializeClassMasterData(1);
 
             // Finalize
             if (_loadingScreen != null)
@@ -988,6 +997,8 @@ namespace Client.Main.Scenes
                 _loadingScreen?.Update(gameTime);
                 return;
             }
+            
+            
 
             var currentKeyboardState = MuGame.Instance.Keyboard;
 
@@ -1046,6 +1057,21 @@ namespace Client.Main.Scenes
                             _characterInfoWindow.HideWindow();
                         else
                             _characterInfoWindow.ShowWindow();
+
+                        // Play window open sound only when opening (not closing)
+                        if (!wasVisible)
+                            SoundController.Instance.PlayBuffer("Sound/iCreateWindow.wav");
+                    }
+                }
+                if (currentKeyboardState.IsKeyDown(Keys.A) && !_previousKeyboardState.IsKeyDown(Keys.A))
+                {
+                    if (_characterMasterClassWindow != null)
+                    {
+                        bool wasVisible = _characterMasterClassWindow.Visible;
+                        if (wasVisible)
+                            _characterMasterClassWindow.HideWindow();
+                        else
+                            _characterMasterClassWindow.ShowWindow();
 
                         // Play window open sound only when opening (not closing)
                         if (!wasVisible)
@@ -1231,6 +1257,7 @@ namespace Client.Main.Scenes
                 Client.Main.Controls.UI.Game.Trade.TradeControl.Instance?.DrawPickedPreview(sprite, gameTime);
             }
             _characterInfoWindow?.BringToFront();
+            //_characterMasterClassWindow?.BringToFront();
         }
 
         private new void DrawBackground()
@@ -1276,6 +1303,12 @@ namespace Client.Main.Scenes
             {
                 await _characterInfoWindow.Initialize();
                 await _characterInfoWindow.PreloadAssetsAsync();
+            }
+
+            if (_characterMasterClassWindow != null)
+            {
+                await _characterMasterClassWindow.Initialize();
+                await _characterMasterClassWindow.PreloadAssetsAsync();
             }
         }
 
